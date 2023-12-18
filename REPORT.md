@@ -15,12 +15,12 @@ Graphs are particularly useful to deal with complex interactions between particu
 
 Here are a few examples of Graphs that could be used to solve Data Science problematics.
 
-<div style="text-align: center;">
+<div align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Sucrose_molecule.svg/1200px-Sucrose_molecule.svg.png" alt="Image 1" width="200">
   <img src="https://ars.els-cdn.com/content/image/1-s2.0-S2352711019302626-gr4.jpg" alt="Image 2" width="200">
 </div>
 
-<div style="text-align: center;">
+<div align="center">
   <img src="https://deeplobe.ai/wp-content/uploads/2023/06/Object-detection-Real-world-applications-and-benefits.png" alt="Image 1" width="200">
   <img src="https://gatton.uky.edu/sites/default/files/iStock-networkWEB.png" alt="Image 2" width="200">
 </div>
@@ -96,7 +96,7 @@ Indeed, molecules for example do not contain the same number of nodes and edges.
 
 
 - Then, when considering a set of nodes (X<sub>1</sub> , ..., X<sub>n</sub>), we induce a node ordering, that we do not wish to impact the neural network prediction. That is, we would like the output to be equivalent for every permutation between nodes. This is called permutation invariance, which is very important to have for graph level predictions which will be our task. We verify this property by finding a prediction function that yields, for every existing perumtation p :
-<div style="text-align:center">f(p(X)) = f(X)</div>
+<div align="center">f(p(X)) = f(X)</div>
 
 
 
@@ -131,7 +131,9 @@ When creating a Graph Neural Network, one must choose the type of layers to use 
 
 Here, the value given to the the node by the layer is given by the following function : 
 
-<div style="text-align:center">h<sub>i</sub> = φ(x<sub>i</sub>, v<sub>j</sub>(c<sub>ji</sub> * ψ(x<sub>j</sub>)))</div>
+$$
+h_i = φ(x_i, v_j(c_{ji} * ψ(x_j)))
+$$
 
 The φ and ψ operators being activation functions, such as sigmoid or ReLU. The v operator is permutation-invariant aggregator, allowing to sum up the neigboorhood information (from every neighborhood node) in one number.
 
@@ -143,7 +145,9 @@ The φ and ψ operators being activation functions, such as sigmoid or ReLU. The
 
 So that the value given to each node differs only with the weights used, that are functions of two nodes now :
 
-<div style="text-align:center">h<sub>i</sub> = φ(x<sub>i</sub>, v<sub>j</sub>(α(x<sub>i</sub>, x<sub>j</sub>) * ψ(x<sub>j</sub>)))</div>
+$$
+h_i = φ(x_i, v_j(α(x_i, x_j) * ψ(x_j)))
+$$
 
 - Another type of layer is Message Passing layer, where 'message' vectors replace the multiplication of weights and an activated value of the neighborhood node, like the following : 
 
@@ -153,12 +157,23 @@ So that the value given to each node differs only with the weights used, that ar
 
 The value set at each node is 
 
-<div style="text-align:center">h<sub>i</sub> = φ(x<sub>i</sub>, v<sub>j</sub>(ψ(X<sub>i</sub>, X<sub>j</sub>)))</div>
+$$
+h_i = φ(x_i, v_j(ψ(X_i, X_j)))
+$$
 
 Here, we have m<sub>ji</sub> = ψ(X<sub>i</sub>, X<sub>j</sub>). The difference with attention layers is that the values m<sub>ji</sub> only are used to compute h<sub>i</sub>, and they are not just weights like with other layers.
 
 For this project, during the first phase of Graph Neural Network implementation, we will use Graph Attention layers in the architecture of the model. 
 
+#### *3c - Pooling layers*
+
+Finally, an inportant part of Graph Neural Network is Graph Pooling, especially for Graph Level tasks as we need to have a global representation of the graph. The principle of pooling is to reduce the size of the graph to obtain a small representation, while keeping essential information about the graph and neigborhoods of nodes. The same concept exists in classic convolutionnal networks for images. It consists in an additionnal layer in the network after the GNN layers that we presented earlier, where sets of nodes and edges will be summarized in a subset of nodes and edges. There are many types of pooling layers, but here are some regular pooling layers often used : 
+ 
+- Global Average Pooling, where the average value of the set of nodes is taken to create a single value for this set. 
+
+- Global Max Pooling, where the maximal value of the set is taken instead of the average.
+
+**finish**
 
 ## II - Graph Neural Network Implementation
 
@@ -179,7 +194,9 @@ The data is structured with :
 
 → The constrained solubility of a molecule is given by the following formula : 
 
-<div style="text-align:center">y = log(p) - SAS - Cycles</div>
+$$
+y = log(p) - SAS - Cycles
+$$
 
 with : 
 
@@ -194,7 +211,7 @@ The constrained solubility is usually used as an indicator of solubility of the 
 You can find a general Data Exploration here : 
 **LINK TO EXPLORATION.IPYNB** 
 
-Here is two boxplots showing the distribution of our target variable :
+Here is two boxplots showing the distribution of our target variable, the second one not displaying extreme values in the data :
 
 <p align="center">
 <img src="images/report_imgs/boxes_w_outliers.png" alt="Image Alt Text" width="400"/>
@@ -220,3 +237,4 @@ An interesting thing to see with these vizualisitations is the  variability of t
 If you look closely, you can see that these two plots show the exact same graph, with the same number of nodes and identical edges. However, the representation is completely different. This illustrates the visual representations of graphs property that we talked about above.
 
 In summary, we are going to try to predict a chemical compound property of molecules from the ZINC dataset, which constitutes a Graph-Level prediction task.
+
