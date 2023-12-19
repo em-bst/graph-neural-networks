@@ -96,9 +96,10 @@ Indeed, molecules for example do not contain the same number of nodes and edges.
 
 
 - Then, when considering a set of nodes (X<sub>1</sub> , ..., X<sub>n</sub>), we induce a node ordering, that we do not wish to impact the neural network prediction. That is, we would like the output to be equivalent for every permutation between nodes. This is called permutation invariance, which is very important to have for graph level predictions which will be our task. We verify this property by finding a prediction function that yields, for every existing perumtation p :
-<div align="center">f(p(X)) = f(X)</div>
 
-
+$$
+f(p(X)) = f(X)
+$$
 
 - In theory, when we consider the edges between the nodes of a graph, we could actually represent our graph in a matrix form, called the adjacency matrix. This type of matrix is a (n x n) matrix, with n being the number of nodes of the graph, and each element of the matrix is 0 or 1 depending on two nodes interacting between each other or not. Here is an example of an adjacency matrix representation, with an H<sub>2</sub>O molecule :
 
@@ -238,3 +239,48 @@ If you look closely, you can see that these two plots show the exact same graph,
 
 In summary, we are going to try to predict a chemical compound property of molecules from the ZINC dataset, which constitutes a Graph-Level prediction task.
 
+### 2 - Network Architecture
+
+For the architecture of our neural network, I used :
+
+- **Graph Attentionnal layers**, as they showed more promising results on a small number of epochs during training. 
+
+- **3 hidden layers**. Indeed, it is important in Graph Neural Networks not to take too many layers, and choose the smallest number of layers possible, while capturing as much information as possible. After having tried 2 and 3 layers, I kept 3 layers that showed better results.
+
+- A classic **Linear** output layer to get the predicted result.
+
+- A **Global Average Pooling** as pooling layer.
+
+- The **Sigmoid** as activation function between layers, that proved to be more efficient compared to other functions like ReLU or Tanh.
+
+- An **Embedding Size** of 32, meaning that the first layer will have a 32 element output dimension, and the output layer will have 32 elements as input dimension. I chose 32 as a representative general number of nodes in the molecules in the data.
+
+- **Dropout** after the first and second layer as regularisation technique, to avoid possible overfitting, with probability 0.2 and 0.1 respectively. This phase takes the proportion given in random input elements, and sets their values to 0. 
+
+Here is the scheme of the Network I used : 
+
+<p align="center">
+<img src="images/report_imgs/gcn arch.png" alt="Image Alt Text" width="550"/>
+</p>
+
+For the configuration of the Training phase :
+
+- Model on **100** epochs.
+
+- **64** graphs per training batch. This means that for a given epoch, the training will go through the set of batches, composed of 64 graphs each (less for the last batch possibly), and make predictions for this batch and compute the loss for this batch. We thus have :
+
+    - 3433 batches in the Train Set
+    - 382 batches in the Validation Set
+    - 79 batches in the Test Set
+
+- **L1 loss** function, so the Mean Absolute Error of prediction, defined by : 
+
+$$
+MAE(y_{pred}, y) = \frac{1}{n} \sum_{i = 1}^n \vert y_{i}^{pred} - y_i \vert 
+$$
+
+- **Adam** Optimizer, with *learning_rate* = 0.03.
+
+- **ReduceLROnPlateau** Scheduler from this optimizer, to ajust the learning rate during training. This scheduler will lower the learning rate during training if a chosen metric stops inproving at a certain epoch. In this case, I chose the Validation Loss as metric, so that if it does not improve between 10 epochs, the learning rate will be lowered to affine training and optimize the results.
+
+- The training was done in a Google Colab notebook, to be able to use the NVIDIA Tesla T4 free GPU of a Colab notebook and accelerate the training phase.
