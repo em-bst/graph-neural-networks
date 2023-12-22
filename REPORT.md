@@ -196,16 +196,16 @@ The data is structured with :
 → The constrained solubility of a molecule is given by the following formula : 
 
 $$
-y = log(p) - SAS - Cycles
+y = log(P) - SAS - Cycles
 $$
 
 with : 
 
-- *log(p)* being the logarithm of the water-octanol partition coefficient. This quantity is itself a measure of the relationship between fat solubility and water solubility of the molecule. 
+- *$log(P)$* being the logarithm of the water-octanol partition coefficient. This quantity is itself a measure of the relationship between fat solubility and water solubility of the molecule. 
 
-- *SAS* is the Synthetic Accessibility Score, which measures how difficult a particular molecule is to synthesize.
+- *$SAS$* is the Synthetic Accessibility Score, which measures how difficult a particular molecule is to synthesize.
 
-- *Cycles* is the number of cyles with more than 6 atoms in the molecule.
+- *$Cycles$* is the number of cyles with more than 6 atoms in the molecule.
 
 The constrained solubility is usually used as an indicator of solubility of the molecule, and a measure of how drug-like a molecule is. Our task will be to predict this property using Graph Neural Networks.
 
@@ -219,7 +219,7 @@ Here is two boxplots showing the distribution of our target variable, the second
 <img src="images/report_imgs/boxes_logp.png" alt="Image Alt Text" width="400"/>
 </p>
 
-We can see that the majority of the graphs take values between -4 and 4. However, there is a subsequent number of outliers taking extremely low values below -20. **do i erase the outliers ?**
+We can see that the majority of the graphs take values between -4 and 4. However, there is a subsequent number of outliers taking extremely low values below -20. For the training phase, we removed from the data the graphs with values under -10 for generalization purposes.
 
 Then, using the package *networkx*, we are able to obtain a visual representation of our molecule graphs : 
 
@@ -260,7 +260,7 @@ For the architecture of our neural network, I used :
 Here is the scheme of the Network I used : 
 
 <p align="center">
-<img src="images/report_imgs/gcn arch.png" alt="Image Alt Text" width="550"/>
+<img src="images/report_imgs/archi_gnn.png" alt="Image Alt Text" width="550"/>
 </p>
 
 For the configuration of the Training phase :
@@ -283,4 +283,19 @@ $$
 
 - **ReduceLROnPlateau** Scheduler from this optimizer, to ajust the learning rate during training. This scheduler will lower the learning rate during training if a chosen metric stops inproving at a certain epoch. In this case, I chose the Validation Loss as metric, so that if it does not improve between 10 epochs, the learning rate will be lowered to affine training and optimize the results.
 
-- The training was done in a Google Colab notebook, to be able to use the NVIDIA Tesla T4 free GPU of a Colab notebook and accelerate the training phase.
+- The training was done in a Google Colab notebook, to be able to use the NVIDIA Tesla T4 free **GPU** of a Colab notebook and accelerate the training phase.
+
+#### Results of the GNN
+
+- Final training loss of **0.6640**, 
+- Final validation loss of **0.6788**. 
+
+Here is the evolution of the losses during training : 
+
+<p align="center">
+<img src="images/report_imgs/losses_evol.png" alt="Image Alt Text" width="400"/>
+</p>
+
+We see that we managed to avoid any overfiting of the data since training and validation losses remain close to each other. Also, we note that the improvement was important at the beginning of the process, and it became quite slow from 40 epochs.
+
+The training phase took around 90 minutes to complete, using the colab GPU.

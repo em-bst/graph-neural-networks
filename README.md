@@ -1,8 +1,44 @@
 # Graph-Neural-Networks
-Understanding Graph Theory and GNNs Project 
 
 <p align="center">
-<img src="https://cdn.sanity.io/images/0vv8moc6/chroma/d9137d3e9adca0a311ae9c078a78d1a0a5c1848a-5999x3000.jpg" alt="Alt Text" width = "1100px">
+<img src="images/molecule_AI.jpg" alt="Alt Text" width = "650">
 </p>
 
+
+
+    .
+    ├── images                      # Images for Report
+    ├── Data_Exploration.ipynb      # Exploration Notebook 
+    ├── GNN.ipynb                   # Basic GNN model Notebook
+    ├── README.md              
+    ├── REPORT.md                   # Comprehensive Report on the project
+    ├── requirements.tx             # Packages to install
+    └── utils.py                    # Imports
+
 This GitHub repository presents the Graph Neural Networks analysis for Molecules property predictions.
+
+Our goal is to predict the **Constrained Solubility** of molecules, defined by :
+
+$$
+y = log(P) - SAS - Cycles
+$$
+
+- $log(P)$ : Logarithm of the water-octanol partition coefficient (relation between fat sloubility and water solubility)
+
+- $SAS$ : Synthetic Accessibility Score.
+
+- $Cycles$ : Number of cycles containing 6 atoms or more
+
+## Basic GNN Architecture
+
+<p align="center">
+<img src="images/report_imgs/archi_gnn.png" alt="Alt Text" width = "650">
+</p>
+
+Result with 100 epochs :
+
+- Train MAE : **0.6640**
+- Validation MAE : **0.6788**
+- Test MAE : **0.6773**
+
+## Transformer Architecture
