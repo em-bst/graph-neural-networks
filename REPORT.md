@@ -171,8 +171,7 @@ For this project, during the first phase of Graph Neural Network implementation,
 Finally, an inportant part of Graph Neural Network is Graph Pooling, especially for Graph Level tasks as we need to have a global representation of the graph. The principle of pooling is to reduce the size of the graph to obtain a small representation, while keeping essential information about the graph and neigborhoods of nodes. Here is an illustration of this process : 
 
 <p align="center">
-<img src="[images/report_imgs/mp.png](https://greeksharifa.github.io/public/img/Machine_Learning/2021-09-09-GraphPooling/01.PNG
-)" alt="Image Alt Text" width="300"/>
+<img src="https://greeksharifa.github.io/public/img/Machine_Learning/2021-09-09-GraphPooling/01.PNG" alt="Image Alt Text" width="400"/>
 </p>
 
 The same concept exists in classic convolutionnal networks for images. It consists in an additionnal layer in the network after the GNN layers that we presented earlier, where sets of nodes and edges will be summarized in a subset of nodes and edges. There are many types of pooling layers, but here are some regular pooling layers often used : 
