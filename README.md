@@ -15,7 +15,7 @@
     ├── requirements.tx             # Packages to install
     └── utils.py                    # Imports
 
-This GitHub repository presents the Graph Neural Networks analysis for Molecules property predictions.
+This GitHub repository presents the Graph Neural Networks framework for Molecules property predictions.
 
 Our goal is to predict the **Constrained Solubility** of molecules, defined by :
 
