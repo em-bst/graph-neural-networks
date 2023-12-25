@@ -164,7 +164,7 @@ $$
 
 Here, we have $m_{ji} = ψ(X_i, X_j)$. The difference with attention layers is that the values $m_{ji}$ only are used to compute $h_i$, and they are not just weights like with other layers.
 
-For this project, during the first phase of Graph Neural Network implementation, we will use Graph Attention layers in the architecture of the model. 
+There are many different layers available in the *PyTorch Geometric* package, and for this project, during the first phase of Graph Neural Network implementation, we will use Graph Attention layers in the architecture of the model. 
 
 #### *3c - Pooling layers*
 
@@ -248,7 +248,7 @@ In summary, we are going to try to predict a chemical compound property of molec
 
 For the architecture of our neural network, I used :
 
-- **Graph Attentionnal layers**, as they showed more promising results on a small number of epochs during training. 
+- **Graph Attentionnal layers**, as they showed more promising results on a small number of epochs during training. **precise kind**
 
 - **3 hidden layers**. Indeed, it is important in Graph Neural Networks not to take too many layers, and choose the smallest number of layers possible, while capturing as much information as possible. After having tried 2 and 3 layers, I kept 3 layers that showed better results.
 
@@ -304,3 +304,11 @@ Here is the evolution of the losses during training :
 We see that we managed to avoid any overfiting of the data since training and validation losses remain close to each other. Also, we note that the improvement was important at the beginning of the process, and it became quite slow from 40 epochs.
 
 The training phase took around 90 minutes to complete, using the colab GPU.
+
+You can find the work that has been done with a GNN architecture here : [GNN.ipynb](GNN.ipynb)
+
+## III - Graph Transformer Implementation
+
+The use of the Transformer architecture applied to the field of Graphs analysis has been introduced in 2019 by [Yun et. al](https://proceedings.neurips.cc/paper_files/paper/2019/file/9d63484abb477c97640154d40595a3bb-Paper.pdf). They applied it to a graph generation and node classification task.
+
+The Transformer architecture relies primarly on attention mechanisms, that lead the model to focus specifically on several parts of the data
