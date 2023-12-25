@@ -1,4 +1,4 @@
-# Graph-Neural-Networks
+# graph-neural-networks
 
 <p align="center">
 <img src="images/molecule_AI.jpg" alt="Alt Text" width = "650">
@@ -9,9 +9,10 @@
     .
     ├── images                      # Images for Report
     ├── Data_Exploration.ipynb      # Exploration Notebook 
-    ├── GNN.ipynb                   # Basic GNN model Notebook
+    ├── GNN.ipynb                   # GNN model Notebook
+    ├── Graph_Transformer.ipynb     # Graph Transformer Notebook
     ├── README.md              
-    ├── REPORT.md                   # Comprehensive Report on the project
+    ├── REPORT.md                   # Comprehensive Report
     ├── requirements.tx             # Packages to install
     └── utils.py                    # Imports
 

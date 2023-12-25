@@ -88,20 +88,20 @@ Indeed, molecules for example do not contain the same number of nodes and edges.
 
 - Increasing the dimension, size and complexity of a Graph can make the analysis very hard to interpret for a human eye.
 
-- A major concept in graph analysis is the Neigborhood, as every node are influenced by their neighborhood nodes and the relation between them. Consider the local structures alongside the global structure is key to obtain a good analysis. The information on the neigborhood of each node can be obtained by transforming the input graph from its general form to a form where each node has a value from a function that takes as input the node itself and its neighborhood. Here is an example, where X<sub>Nb</sub> is the set of nodes connected to the node X<sub>b</sub> : 
+- A major concept in graph analysis is the Neigborhood, as every node are influenced by their neighborhood nodes and the relation between them. Consider the local structures alongside the global structure is key to obtain a good analysis. The information on the neigborhood of each node can be obtained by transforming the input graph from its general form to a form where each node has a value from a function that takes as input the node itself and its neighborhood. Here is an example, where $X_{Nb}$ is the set of nodes connected to the node $X_b$ : 
 
 <p align="center">
 <img src="images/report_imgs/neigb.png" alt="Image Alt Text" width="350"/>
 </p>
 
 
-- Then, when considering a set of nodes (X<sub>1</sub> , ..., X<sub>n</sub>), we induce a node ordering, that we do not wish to impact the neural network prediction. That is, we would like the output to be equivalent for every permutation between nodes. This is called permutation invariance, which is very important to have for graph level predictions which will be our task. We verify this property by finding a prediction function that yields, for every existing perumtation p :
+- Then, when considering a set of nodes $(X_1, ..., X_n)$, we induce a node ordering, that we do not wish to impact the neural network prediction. That is, we would like the output to be equivalent for every permutation between nodes. This is called permutation invariance, which is very important to have for graph level predictions which will be our task. We verify this property by finding a prediction function that yields, for every existing perumtation $p$ :
 
 $$
 f(p(X)) = f(X)
 $$
 
-- In theory, when we consider the edges between the nodes of a graph, we could actually represent our graph in a matrix form, called the adjacency matrix. This type of matrix is a (n x n) matrix, with n being the number of nodes of the graph, and each element of the matrix is 0 or 1 depending on two nodes interacting between each other or not. Here is an example of an adjacency matrix representation, with an H<sub>2</sub>O molecule :
+- In theory, when we consider the edges between the nodes of a graph, we could actually represent our graph in a matrix form, called the adjacency matrix. This type of matrix is a $(n * n)$ matrix, with $n$ being the number of nodes of the graph, and each element of the matrix is the type of edge existing between two nodes, depending if they interact between each other or not. Here is an example of an adjacency matrix representation, with an H<sub>2</sub>O molecule :
 
 <p align="center">
 <img src="https://study.com/cimages/multimages/16/water-2876275_6407686174879164832368.png" alt="Image Alt Text" width="150"/>
@@ -124,7 +124,7 @@ In summary, a Graph is a singular type of data that needs to be well understood 
 
 When creating a Graph Neural Network, one must choose the type of layers to use to realize the desired task. In general, classical types of layers are Graph Convolutionnal layers, Graph Attentional layers, and Graph Message Passing layers. They differ in the way they diffuse the neigborhood message, so the way that we go from image 1 to image 2 on the above explanation of Neighborhood. These layers are thus the functions taking as parameters the node itself and its neigborhood and send the value h<sub>i</sub> that we see on the image. The way they differ is the weights given to the neighborhood information.
 
-- First, Graph Convolutionnal layers take fixed weights determined by the neigborhood nodes and edges. Here is an illustration, where each node i sends a fixed weight c<sub>bi</sub> :
+- First, Graph Convolutionnal layers take fixed weights determined by the neigborhood nodes and edges. Here is an illustration, where each node $i$ sends a fixed weight $c_{bi}$ :
 
 <p align="center">
 <img src="images/report_imgs/gcnconv.png" alt="Image Alt Text" width="300"/>
@@ -136,7 +136,7 @@ $$
 h_i = φ(x_i, v_j(c_{ji} * ψ(x_j)))
 $$
 
-The φ and ψ operators being activation functions, such as sigmoid or ReLU. The v operator is permutation-invariant aggregator, allowing to sum up the neigboorhood information (from every neighborhood node) in one number.
+The $φ$ and $ψ$ operators being activation functions, such as sigmoid or ReLU. The $v$ operator is permutation-invariant aggregator, allowing to sum up the neigboorhood information (from every neighborhood node) in one number.
 
 - Then, Graph Attentionnal layers take as weights from the attention given to each part of the neighborhood. Attention in deep learning refers to the process of giving higher importance to some parts of the input compared to other parts. In fact, the weights applied to the nodes are computed from the relation between the 'central' node and its neighbor, so that the kind of relation actually matters. Here is an illustration to sum it up : 
 
@@ -162,7 +162,7 @@ $$
 h_i = φ(x_i, v_j(ψ(X_i, X_j)))
 $$
 
-Here, we have m<sub>ji</sub> = ψ(X<sub>i</sub>, X<sub>j</sub>). The difference with attention layers is that the values m<sub>ji</sub> only are used to compute h<sub>i</sub>, and they are not just weights like with other layers.
+Here, we have $m_{ji} = ψ(X_i, X_j)$. The difference with attention layers is that the values $m_{ji}$ only are used to compute $h_i$, and they are not just weights like with other layers.
 
 For this project, during the first phase of Graph Neural Network implementation, we will use Graph Attention layers in the architecture of the model. 
 
@@ -180,7 +180,7 @@ The same concept exists in classic convolutionnal networks for images. It consis
 
 - Global Max Pooling, where the maximal value of the set is taken instead of the average.
 
-**finish**
+For out Graph Neural Network, we will use a Global Average Pooling layer.
 
 ## II - Graph Neural Network Implementation
 
@@ -194,10 +194,10 @@ We will work in this project with the ZINC open-source dataset. It contains a co
 
 The data is structured with :
 
-- A variable x, which describes the nodes of a graph
-- A variable edge_index, to indicate the connections between nodes
-- A variable edge_attr, which contains the type of bond (edge) between two nodes
-- A variable y, which is our **target** variable, and measures the constrained solubility of the molecules. 
+- A variable $x$, which describes the nodes of a graph
+- A variable $edge\_index$, to indicate the connections between nodes
+- A variable $edge\_attr$, which contains the type of bond (edge) between two nodes
+- A variable $y$, which is our **target** variable, and measures the constrained solubility of the molecules. 
 
 → The constrained solubility of a molecule is given by the following formula : 
 
@@ -215,10 +215,9 @@ with :
 
 The constrained solubility is usually used as an indicator of solubility of the molecule, and a measure of how drug-like a molecule is. Our task will be to predict this property using Graph Neural Networks.
 
-You can find a general Data Exploration here : 
-**LINK TO EXPLORATION.IPYNB** 
+You can find a general Data Exploration here : [Data_Exploration.ipynb](Data_Exploration.ipynb)
 
-Here is two boxplots showing the distribution of our target variable, the second one not displaying extreme values in the data :
+Here are two boxplots showing the distribution of our target variable, the second one not displaying extreme values in the data :
 
 <p align="center">
 <img src="images/report_imgs/boxes_w_outliers.png" alt="Image Alt Text" width="400"/>
@@ -233,12 +232,12 @@ Then, using the package *networkx*, we are able to obtain a visual representatio
 <img src="images/report_imgs/graph_ex.png" alt="Image Alt Text" width="400"/>
 </p>
 
-We can clearly see the structure of our molecule, with its nodes and edges. We are just unable to vizualise the type of bond between the nodes. **or color by edge_attr?**
+We can clearly see the structure of our molecule, with its nodes and edges.
 
 An interesting thing to see with these vizualisitations is the  variability of the representation for a same graph, like in the following example : 
 
 <p align="center">
-<img src="images/report_imgs/graph01.png" alt="Image Alt Text" width="400"/>
+<img src="images/report_imgs/graph01.png" alt="Image Alt Text" width="500"/>
 </p>
 
 If you look closely, you can see that these two plots show the exact same graph, with the same number of nodes and identical edges. However, the representation is completely different. This illustrates the visual representations of graphs property that we talked about above.
@@ -273,7 +272,7 @@ For the configuration of the Training phase :
 
 - Model on **100** epochs.
 
-- **64** graphs per training batch. This means that for a given epoch, the training will go through the set of batches, composed of 64 graphs each (less for the last batch possibly), and make predictions for this batch and compute the loss for this batch. We thus have :
+- **64** graphs per data batch. This means that for a given epoch, the training will go through the set of batches, composed of 64 graphs each (less for the last batch possibly), and make predictions for this batch and compute the loss for this batch. We thus have :
 
     - 3433 batches in the Train Set
     - 382 batches in the Validation Set
