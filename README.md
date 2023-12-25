@@ -1,12 +1,11 @@
 # graph-neural-networks
 
 <p align="center">
-<img src="images/molecule_AI.jpg" alt="Alt Text" width = "650">
+<img src="images/molecule_AI.jpg" alt="Alt Text" width = "800">
 </p>
 
 
 
-    .
     ├── images                      # Images for Report
     ├── Data_Exploration.ipynb      # Exploration Notebook 
     ├── GNN.ipynb                   # GNN model Notebook
@@ -43,3 +42,13 @@ Result with 100 epochs :
 - Test MAE : **0.6773**
 
 ## Transformer Architecture
+
+<p align="center">
+<img src="images/report_imgs/archi_transformer.png" alt="Alt Text" width = "650">
+</p>
+
+Result with 100 epochs :
+
+- Train MAE : **0.6446**
+- Validation MAE : **0.6642**
+- Test MAE : **0.6769**
