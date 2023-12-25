@@ -1,7 +1,8 @@
 # Graph Neural Networks - Comprehensive Report
+*Théo Bacqueyrisse*
 
 ## Introduction
-In this project, I will first try to understand the theory behind Graphs and their use with Neural Networks. Then, in a second part, I will detail the approach used in order to make Graph Level predictions applied to Molecules Data. Finally, in a third part, I will introduce the work that has been done to implement a Graph Transformer from scratch (*compléter*)
+In this project, I will first try to understand the theory behind Graphs and their use with Neural Networks. Then, in a second part, I will detail the approach used in order to make Graph Level predictions applied to Molecules Data. Finally, in a third part, I will introduce the work that has been done to implement a Graph Transformer from scratch. 
 
 ## I - Graph Neural Network Theory
 
@@ -118,7 +119,7 @@ $$
 
 However, with the classical types of layers used in Graph Neural Networks that we will describe later, the layers do not take the actual adjacency matrix as input 
 
-In summary, a Graph is a singular type of data that needs to be well understood to best adapt the analysis to the taks that is to be performed. Let us know see what are the types of GNN layers, and how they work.
+In summary, a Graph is a singular type of data that needs to be well understood to best adapt the analysis to the taks that is to be performed. Let us now see what are the types of GNN layers, and how they work.
 
 #### *3b - Different types of GNN layers*
 
@@ -176,9 +177,11 @@ Finally, an inportant part of Graph Neural Network is Graph Pooling, especially 
 
 The same concept exists in classic convolutionnal networks for images. It consists in an additionnal layer in the network after the GNN layers that we presented earlier, where sets of nodes and edges will be summarized in a subset of nodes and edges. There are many types of pooling layers, but here are some regular pooling layers often used : 
  
-- Global Average Pooling, where the average value of the set of nodes is taken to create a single value for this set. 
+- Global Average Pooling, where the average value of a set of nodes is taken to create a single value for this set. 
 
-- Global Max Pooling, where the maximal value of the set is taken instead of the average.
+- Global Max Pooling, where the maximal value of a set is taken instead of the average.
+
+- Global Add Pooling, where the sum of a set of nodes is taken.
 
 For out Graph Neural Network, we will use a Global Average Pooling layer.
 
@@ -248,15 +251,39 @@ In summary, we are going to try to predict a chemical compound property of molec
 
 For the architecture of our neural network, I used :
 
-- **Graph Attentionnal layers**, as they showed more promising results on a small number of epochs during training. **precise kind**
+- **Graph Attentionnal layers**, as they showed more promising results on a small number of epochs during training. We use the GATConv layer from the PyTorch Geometric package, where the attention mechanism values $\alpha_{i,j}$ are computed by the following formula :
+
+$$
+\alpha_{i,j} = \frac{exp(LeakyReLU(a^T[W_{h_i} \mid\mid W_{h_j}]))}{\sum_{k \in N_i} exp(LeakyReLU(a^T[W_{h_i} \mid\mid W_{h_j}]))}
+$$
+
+Here, $a$ is a weight vector, and as we discussed previously, the $j$ nodes are the nodes in the neigborhood $N_i$ of $X_i$, and $W$ are weights matrices applied to these nodes. 
+
+To recall, the $LeakyReLU$ formula is : 
+
+$$
+LeakyRelu(z) = 
+\begin{cases}
+    0.01 z & \text{if} & z < 0 \\
+    z & \text{if } & z \geq 0
+\end{cases}
+$$
 
 - **3 hidden layers**. Indeed, it is important in Graph Neural Networks not to take too many layers, and choose the smallest number of layers possible, while capturing as much information as possible. After having tried 2 and 3 layers, I kept 3 layers that showed better results.
 
 - A classic **Linear** output layer to get the predicted result.
 
-- A **Global Average Pooling** as pooling layer.
+- A **Global Average Pooling** as pooling layer, taking the formula :
 
-- The **Sigmoid** as activation function between layers, that proved to be more efficient compared to other functions like ReLU or Tanh.
+$$
+r_i = \frac{1}{N_i} \sum_{n=1}^{N_i} x_n
+$$
+
+- The **Sigmoid** as activation function between layers, that proved to be more efficient compared to other functions like ReLU or Tanh, given by the following formula :
+
+$$
+sigmoid(z) = \frac{1}{1 + e^{-z}}
+$$
 
 - An **Embedding Size** of 32, meaning that the first layer will have a 32 element output dimension, and the output layer will have 32 elements as input dimension. I chose 32 as a representative general number of nodes in the molecules in the data.
 
@@ -284,16 +311,17 @@ $$
 MAE(y_{pred}, y) = \frac{1}{n} \sum_{i = 1}^n \vert y_{i}^{pred} - y_i \vert 
 $$
 
-- **Adam** Optimizer, with *learning_rate* = 0.03.
+- **Adam** Optimizer, with *learning_rate* = 0.003.
 
 - **ReduceLROnPlateau** Scheduler from this optimizer, to ajust the learning rate during training. This scheduler will lower the learning rate during training if a chosen metric stops inproving at a certain epoch. In this case, I chose the Validation Loss as metric, so that if it does not improve between 10 epochs, the learning rate will be lowered to affine training and optimize the results.
 
 - The training was done in a Google Colab notebook, to be able to use the NVIDIA Tesla T4 free **GPU** of a Colab notebook and accelerate the training phase.
 
-#### Results of the GNN
+#### Results of the GNN :
 
-- Final training loss of **0.6640**, 
-- Final validation loss of **0.6788**. 
+- Final training loss of **0.6640**
+- Final validation loss of **0.6788**
+- Test loss of **0.6773**
 
 Here is the evolution of the losses during training : 
 
@@ -303,12 +331,120 @@ Here is the evolution of the losses during training :
 
 We see that we managed to avoid any overfiting of the data since training and validation losses remain close to each other. Also, we note that the improvement was important at the beginning of the process, and it became quite slow from 40 epochs.
 
-The training phase took around 90 minutes to complete, using the colab GPU.
+The training phase took around 45 minutes to complete, using the colab GPU.
 
-You can find the work that has been done with a GNN architecture here : [GNN.ipynb](GNN.ipynb)
+You can find the work that has been done with this GNN architecture here : [GNN.ipynb](GNN.ipynb)
 
 ## III - Graph Transformer Implementation
 
+### 1 - Transformer principle with Graphs
+
+
 The use of the Transformer architecture applied to the field of Graphs analysis has been introduced in 2019 by [Yun et. al](https://proceedings.neurips.cc/paper_files/paper/2019/file/9d63484abb477c97640154d40595a3bb-Paper.pdf). They applied it to a graph generation and node classification task.
 
-The Transformer architecture relies primarly on attention mechanisms, that lead the model to focus specifically on several parts of the data
+The Transformer will use message passing like with GNN to obtain information from nodes and their neigborhoods as it is crucial is Graph analysis. However, the way that the message is passed can differ from GNN architecture.
+
+The Transformer architecture relies primarly on self attention mechanisms, that lead the model to focus specifically on several parts of the data, and assign importance weights to these parts of the data.
+
+There are different kinds of attention mechanisms, but we will focus on the Multi-Head attention mechanism for this project that is very common for a Transformer architecture.
+
+The goal of Multi-Head Attention is to compute attention multiple times in parallel using a certain number of Weights matrices, that is the number of Heads to be chosen. These matrices are learnable parameters in the same way than with a classical Transformer architecture.
+
+Each head focuses on different parts of the data, allowing the model to capture different relationships simultaneously.
+
+Like with the GNN, a Graph Transformer can contain a pooling layer to reduce the size of a graph while still containing important information.
+
+
+### 2 - Network Architecture
+
+Since, in addition of implementing a Transformer, we would like to compare the results with the GNN model, we chose to use parameters quite similar to the GNN architecture. We thus have :
+
+- **TransformerConv** layers from the package *PyTorch Geometric*, where data is updated in the following way : 
+
+$$
+x_i' = W_1 x_1 + \sum_{i \in N_i}  \alpha_{i,j} W_2 x_j
+$$
+
+with $N_i$ again the neighborhood of node i, and $\alpha_{i,j}$ computed as : 
+
+$$
+\alpha_{i,j} = softmax(\frac{(W_3 x_i)^T (W_4 x_j)}{\sqrt d})
+$$
+
+In these equations, $W$ refers to weights matrices mentionned above, with here 4 heads in the mechanism.
+
+The softmax formula is : 
+
+$$
+softmax(z)_i = \frac{e^{z_i}}{\sum_{j=1}^N e^{z_j}}
+$$
+
+- **2** hidden TransformerConv layers, to once again try to capture as much information as possible with as few layers as possible.
+
+- **4 heads** for each TransformerConv layer.
+
+- A classic **Linear** output layer to get the predicted result.
+
+- A **Global Average Pooling** as pooling layer, taking the formula :
+
+$$
+r_i = \frac{1}{N_i} \sum_{n=1}^{N_i} x_n
+$$
+
+- The **Sigmoid** as activation function between layers, that proved to be more efficient compared to other functions like ReLU or Tanh, given by the following formula :
+
+$$
+sigmoid(z) = \frac{1}{1 + e^{-z}}
+$$
+
+- An **Embedding Size** of 72. Choosing this value has been the trick in this process, as it appears that TransformerConv does not support input graphs of different dimensions. The choice of 72 comes from the dimension of the $edge\_ attr$ variable from the first graph in my data. In fact, the dimension of $edge\_ attr$ is necessarly twice the number of nodes in a graph as we consider every nodes two-by-two.
+
+
+I thus had to, first choose an embedding size, 72, and then apply this size to every input graph. So if a graph had less than 36 nodes, so a dimension of $edge\_ attr$ lower than 72, I reashaped it adding 'virtual' edges attributes. If on the contrary it had a dimension of $edge\_ attr$ higher than 72, I only selected the first 72 values and dropped the other. This process probably limits the performance that the model can attain, and I am considering using another kind of Transformer layer as a next step of the project that is suitable for differently sized input graphs. 
+
+- **Dropout** after the first and second layer as regularisation technique, to avoid possible overfitting, with probability 0.4 and 0.2 respectively. This phase takes the proportion given in random input elements, and sets their values to 0. 
+
+Here is a schema of the created network, with the use of different heads illustrated.
+
+<p align="center">
+<img src="images/report_imgs/archi_transformer.png" alt="Image Alt Text" width="550"/>
+</p>
+
+At each TransformerConv layer, there are 4 sets of 72 elements computed, because we chose to use 4 heads.
+
+For the configuration of the Training phase, the same parameters than with the GNN were used so :
+
+- **100** epochs.
+
+- **64** graphs per data batch.
+
+- **L1 loss** function.
+
+- **Adam** Optimizer, with *learning_rate* = 0.003.
+
+- **ReduceLROnPlateau** 
+
+- The training was done in a Google Colab notebook, to be able to use the NVIDIA Tesla T4 free **GPU** of a Colab notebook and accelerate the training phase.
+
+#### Results of the Transformer :
+
+- Final training loss of **0.6446**
+- Final validation loss of **0.6642**
+- Test loss of **0.6769**
+
+Here is the evolution of the losses during training : 
+
+<p align="center">
+<img src="images/report_imgs/transformer_losses.png" alt="Image Alt Text" width="400"/>
+</p>
+
+Here also, we managed to keep our training phase relatively stable, even if there are some peaks in validations losses. 
+
+The training phase took around 60 minutes to complete, using the colab GPU.
+
+Concerning the results, we see that we managed to slighlty improve our results from our GNN model. However, the difference is thin and I believe that the model can be optmized as a next step, perhaps by trying to find other configuration parameters and architecture more suited to this regression task, and that it can be done as a next step for this project.
+
+You can find the work that has been done with this GNN architecture here : [Graph_Transformer.ipynb](Graph_Transformer.ipynb)
+
+## Conclusion
+
