@@ -2,6 +2,7 @@
 import pandas
 import numpy as np
 import torch
+import torch.nn as nn
 from torch_geometric.datasets import ZINC
 
 # Visualisation
