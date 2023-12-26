@@ -25,11 +25,11 @@ $$
 
 - $log(P)$ : Logarithm of the water-octanol partition coefficient (relation between fat sloubility and water solubility)
 
-- $SAS$ : Synthetic Accessibility Score.
+- $SAS$ : Synthetic Accessibility Score
 
 - $Cycles$ : Number of cycles containing 6 atoms or more
 
-This property is a common indicator of how medcicinal a molecule is.
+This property is a common indicator of how medicinal a molecule is.
 
 ## GNN Architecture
 
@@ -37,7 +37,7 @@ This property is a common indicator of how medcicinal a molecule is.
 <img src="images/report_imgs/archi_gnn.png" alt="Alt Text" width = "650">
 </p>
 
-Result with 100 epochs :
+Results with 100 epochs :
 
 - Train MAE : **0.6640**
 - Validation MAE : **0.6788**
@@ -49,7 +49,7 @@ Result with 100 epochs :
 <img src="images/report_imgs/archi_transformer.png" alt="Alt Text" width = "650">
 </p>
 
-Result with 100 epochs :
+Results with 100 epochs :
 
 - Train MAE : **0.6446**
 - Validation MAE : **0.6642**
