@@ -12,12 +12,12 @@
     ├── Graph_Transformer.ipynb     # Graph Transformer Notebook
     ├── README.md              
     ├── REPORT.md                   # Comprehensive Report
-    ├── requirements.tx             # Packages to install
+    ├── requirements.txt            # Packages to install
     └── utils.py                    # Imports
 
-This GitHub repository presents the Graph Neural Networks framework for Molecules property predictions.
+This GitHub repository presents the Graph Neural Networks framework for Molecules property predictions. This project is part of my M2 diploma at the Toulouse School of Economics.
 
-Our goal is to predict the **Constrained Solubility** of molecules, defined by :
+The goal is to predict the **Constrained Solubility** of molecules, defined by :
 
 $$
 y = log(P) - SAS - Cycles
@@ -29,7 +29,9 @@ $$
 
 - $Cycles$ : Number of cycles containing 6 atoms or more
 
-## Basic GNN Architecture
+This property is a common indicator of how medcicinal a molecule is.
+
+## GNN Architecture
 
 <p align="center">
 <img src="images/report_imgs/archi_gnn.png" alt="Alt Text" width = "650">
