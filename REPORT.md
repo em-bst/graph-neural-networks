@@ -197,9 +197,9 @@ We will work in this project with the ZINC open-source dataset. It contains a co
 
 The data is structured with :
 
-- A variable $x$, which describes the nodes of a graph
-- A variable $edge\_index$, to indicate the connections between nodes
-- A variable $edge\_attr$, which contains the type of bond (edge) between two nodes
+- A variable $x$, which is the atom type contained in the graph. A dictionnary of the atoms is available in the raw ZINC dataset. For example, 0 refers to Carbon atoms.
+- A variable $edge\_index$, to indicate the connections between nodes. It takes values such as [1, 5] and [5, 1] to signify that nodes 1 and 5 have a bond to connect them.
+- A variable $edge\_attr$, which contains the type of bond (edge) between two nodes. The dictionnary of these bonds is also available in the raw ZINC data. This variable takes values 1, 2 and 3 for single, double and triple bonds.
 - A variable $y$, which is our **target** variable, and measures the constrained solubility of the molecules. 
 
 → The constrained solubility of a molecule is given by the following formula : 
