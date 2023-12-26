@@ -198,8 +198,8 @@ We will work in this project with the ZINC open-source dataset. It contains a co
 The data is structured with :
 
 - A variable $x$, which is the atom type contained in the graph. A dictionnary of the atoms is available in the raw ZINC dataset. For example, 0 refers to Carbon atoms, and 1 to Oxygen.
-- A variable $edge\_{index}$, to indicate the connections between nodes. It takes values such as [1, 5] and [5, 1] to signify that nodes 1 and 5 have a bond to connect them.
-- A variable $edge\_{attr}$, which contains the type of bond (edge) between two nodes. The dictionnary of these bonds is also available in the raw ZINC data. This variable takes values 1, 2 and 3 for single, double and triple bonds.
+- A variable $edge index$, to indicate the connections between nodes. It takes values such as [1, 5] and [5, 1] to signify that nodes 1 and 5 have a bond to connect them.
+- A variable $edge attr$, which contains the type of bond (edge) between two nodes. The dictionnary of these bonds is also available in the raw ZINC data. This variable takes values 1, 2 and 3 for single, double and triple bonds.
 - A variable $y$, which is our **target** variable, and measures the constrained solubility of the molecules. 
 
 → The constrained solubility of a molecule is given by the following formula : 
@@ -397,10 +397,10 @@ $$
 sigmoid(z) = \frac{1}{1 + e^{-z}}
 $$
 
-- An **Embedding Size** of 72. Choosing this value has been the trick in this process, as it appears that TransformerConv does not support input graphs of different dimensions. The choice of 72 comes from the dimension of the $edge\_{attr}$ variable from the first graph in my data. In fact, the dimension of $edge\_{attr}$ is necessarly twice the number of nodes in a graph as we consider every nodes two-by-two.
+- An **Embedding Size** of 72. Choosing this value has been the trick in this process, as it appears that TransformerConv does not support input graphs of different dimensions. The choice of 72 comes from the dimension of the $edgeattr$ variable from the first graph in my data. In fact, the dimension of $edgeattr$ is necessarly twice the number of nodes in a graph as we consider every nodes two-by-two.
 
 
-I thus had to, first choose an embedding size, 72, and then apply this size to every input graph. So if a graph had less than 36 nodes, so a dimension of $edge\_{attr}$ lower than 72, I reashaped it adding 'virtual' edges attributes. If on the contrary it had a dimension of $edge\_{attr}$ higher than 72, I only selected the first 72 values and dropped the other. This process probably limits the performance that the model can attain, and I am considering using another kind of Transformer layer as a next step of the project that is suitable for differently sized input graphs. 
+I thus had to, first choose an embedding size, 72, and then apply this size to every input graph. So if a graph had less than 36 nodes, so a dimension of $edgeattr$ lower than 72, I reashaped it adding 'virtual' edges attributes. If on the contrary it had a dimension of $edgeattr$ higher than 72, I only selected the first 72 values and dropped the other. This process probably limits the performance that the model can attain, and I am considering using another kind of Transformer layer as a next step of the project that is suitable for differently sized input graphs. 
 
 - **Dropout** after the first and second layer as regularisation technique, to avoid possible overfitting, with probability 0.4 and 0.2 respectively. This phase takes the proportion given in random input elements, and sets their values to 0. 
 
