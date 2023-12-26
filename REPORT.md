@@ -62,7 +62,7 @@ This type of prediction can have amazing value nowadays with the role that play 
 
 #### *2c - Graph Level Predictions*
 
-This type of predictions is when you wan to predict a characteristic, or a number for example, by looking at a whole known graph, its interactions and properties. For example, when dealing with Recommendation System, you can find yourslef with a graph like this : 
+This type of predictions is when you wan to predict a characteristic, or a number for example, by looking at a whole known graph, its interactions and properties. For example, when dealing with Recommendation System, you can find yourself with a graph like this : 
 
 <p align="center">
 <img src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*MVzPPB2RSFNvMsQbzzl0OA.png" alt="Image Alt Text" width="450"/>
@@ -123,7 +123,7 @@ In summary, a Graph is a singular type of data that needs to be well understood 
 
 #### *3b - Different types of GNN layers*
 
-When creating a Graph Neural Network, one must choose the type of layers to use to realize the desired task. In general, classical types of layers are Graph Convolutionnal layers, Graph Attentional layers, and Graph Message Passing layers. They differ in the way they diffuse the neigborhood message, so the way that we go from image 1 to image 2 on the above explanation of Neighborhood. These layers are thus the functions taking as parameters the node itself and its neigborhood and send the value h<sub>i</sub> that we see on the image. The way they differ is the weights given to the neighborhood information.
+When creating a Graph Neural Network, one must choose the type of layers to use to realize the desired task. In general, classical types of layers are Graph Convolutionnal layers, Graph Attentional layers, and Graph Message Passing layers. They differ in the way they diffuse the neigborhood message, so the way that we go from image 1 to image 2 on the above explanation of Neighborhood. These layers are thus the functions taking as parameters the node itself and its neigborhood and send the value $h_i$ that we see on the above image. The way they differ is the weights given to the neighborhood information.
 
 - First, Graph Convolutionnal layers take fixed weights determined by the neigborhood nodes and edges. Here is an illustration, where each node $i$ sends a fixed weight $c_{bi}$ :
 
@@ -163,7 +163,7 @@ $$
 h_i = φ(x_i, v_j(ψ(X_i, X_j)))
 $$
 
-Here, we have $m_{ji} = ψ(X_i, X_j)$. The difference with attention layers is that the values $m_{ji}$ only are used to compute $h_i$, and they are not just weights like with other layers.
+Here, we have $m_{ji} = ψ(X_i, X_j)$. The difference with attention layers is that ony the values $m_{ji}$ are used to compute $h_i$, and they are not just weights like with other layers.
 
 There are many different layers available in the *PyTorch Geometric* package, and for this project, during the first phase of Graph Neural Network implementation, we will use Graph Attention layers in the architecture of the model. 
 
@@ -197,9 +197,9 @@ We will work in this project with the ZINC open-source dataset. It contains a co
 
 The data is structured with :
 
-- A variable $x$, which is the atom type contained in the graph. A dictionnary of the atoms is available in the raw ZINC dataset. For example, 0 refers to Carbon atoms.
-- A variable $edge\_index$, to indicate the connections between nodes. It takes values such as [1, 5] and [5, 1] to signify that nodes 1 and 5 have a bond to connect them.
-- A variable $edge\_attr$, which contains the type of bond (edge) between two nodes. The dictionnary of these bonds is also available in the raw ZINC data. This variable takes values 1, 2 and 3 for single, double and triple bonds.
+- A variable $x$, which is the atom type contained in the graph. A dictionnary of the atoms is available in the raw ZINC dataset. For example, 0 refers to Carbon atoms, and 1 to Oxygen.
+- A variable $edge\_{index}$, to indicate the connections between nodes. It takes values such as [1, 5] and [5, 1] to signify that nodes 1 and 5 have a bond to connect them.
+- A variable $edge\_{attr}$, which contains the type of bond (edge) between two nodes. The dictionnary of these bonds is also available in the raw ZINC data. This variable takes values 1, 2 and 3 for single, double and triple bonds.
 - A variable $y$, which is our **target** variable, and measures the constrained solubility of the molecules. 
 
 → The constrained solubility of a molecule is given by the following formula : 
@@ -210,11 +210,11 @@ $$
 
 with : 
 
-- *$log(P)$* being the logarithm of the water-octanol partition coefficient. This quantity is itself a measure of the relationship between fat solubility and water solubility of the molecule. 
+- $log(P)$ being the logarithm of the water-octanol partition coefficient. This quantity is itself a measure of the relationship between fat solubility and water solubility of the molecule. 
 
-- *$SAS$* is the Synthetic Accessibility Score, which measures how difficult a particular molecule is to synthesize.
+- $SAS$ is the Synthetic Accessibility Score, which measures how difficult a particular molecule is to synthesize.
 
-- *$Cycles$* is the number of cyles with more than 6 atoms in the molecule.
+- $Cycles$ is the number of cyles with more than 6 atoms in the molecule.
 
 The constrained solubility is usually used as an indicator of solubility of the molecule, and a measure of how drug-like a molecule is. Our task will be to predict this property using Graph Neural Networks.
 
@@ -376,7 +376,7 @@ In these equations, $W$ refers to weights matrices mentionned above, with here 4
 The softmax formula is : 
 
 $$
-softmax(z)_i = \frac{e^{z_i}}{\sum_{j=1}^N e^{z_j}}
+softmax(z_i) = \frac{e^{z_i}}{\sum_{j=1}^{N} e^{z_j}}
 $$
 
 - **2** hidden TransformerConv layers, to once again try to capture as much information as possible with as few layers as possible.
@@ -397,10 +397,10 @@ $$
 sigmoid(z) = \frac{1}{1 + e^{-z}}
 $$
 
-- An **Embedding Size** of 72. Choosing this value has been the trick in this process, as it appears that TransformerConv does not support input graphs of different dimensions. The choice of 72 comes from the dimension of the $edge\_ attr$ variable from the first graph in my data. In fact, the dimension of $edge\_ attr$ is necessarly twice the number of nodes in a graph as we consider every nodes two-by-two.
+- An **Embedding Size** of 72. Choosing this value has been the trick in this process, as it appears that TransformerConv does not support input graphs of different dimensions. The choice of 72 comes from the dimension of the $edge\_{attr}$ variable from the first graph in my data. In fact, the dimension of $edge\_{attr}$ is necessarly twice the number of nodes in a graph as we consider every nodes two-by-two.
 
 
-I thus had to, first choose an embedding size, 72, and then apply this size to every input graph. So if a graph had less than 36 nodes, so a dimension of $edge\_ attr$ lower than 72, I reashaped it adding 'virtual' edges attributes. If on the contrary it had a dimension of $edge\_ attr$ higher than 72, I only selected the first 72 values and dropped the other. This process probably limits the performance that the model can attain, and I am considering using another kind of Transformer layer as a next step of the project that is suitable for differently sized input graphs. 
+I thus had to, first choose an embedding size, 72, and then apply this size to every input graph. So if a graph had less than 36 nodes, so a dimension of $edge\_{attr}$ lower than 72, I reashaped it adding 'virtual' edges attributes. If on the contrary it had a dimension of $edge\_{attr}$ higher than 72, I only selected the first 72 values and dropped the other. This process probably limits the performance that the model can attain, and I am considering using another kind of Transformer layer as a next step of the project that is suitable for differently sized input graphs. 
 
 - **Dropout** after the first and second layer as regularisation technique, to avoid possible overfitting, with probability 0.4 and 0.2 respectively. This phase takes the proportion given in random input elements, and sets their values to 0. 
 
