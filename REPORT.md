@@ -448,3 +448,10 @@ You can find the work that has been done with this GNN architecture here : [Grap
 
 ## Conclusion
 
+In conclusion, Graph Neural Networks is a particular type of Network in the field of Deep Learning. The main reason is the singular structure of graph data that are composed of nodes and edges, and possibly additional features associated to these nodes and features. 
+
+We focused on a Graph level prediction task. Using the ZINC dataset containing molecule graphs, we tried to build a framework to predict the constrained solubility of these molecules, which is a general indicator of how medicinal a molecule can be. 
+
+Using first a Graph Neural Network Architecture using Graph Attentional layers, we managed to attain a test Mean Absolute Error of 0.6773. 
+
+In a second time, we built a Graph Transformer model using Multi-Head attention, to achieve a test Mean Absolute Error of 0.6769. I believe this model can still be highly improved, and it can be part of this project next steps.
