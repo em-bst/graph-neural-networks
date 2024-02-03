@@ -1,7 +1,7 @@
 # graph-neural-networks
 
 <p align="center">
-<img src="images/molecule_AI.jpg" alt="Alt Text" width = "800">
+<img src="images/molecule_bing.jpeg" alt="Alt Text" width = "800">
 </p>
 
 
